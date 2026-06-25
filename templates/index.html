@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Happy Birthday {{ name }} - A special birthday surprise website">
+    <meta name="author" content="Birthday Surprise">
+    <meta property="og:title" content="Happy Birthday {{ name }}!">
+    <meta property="og:description" content="A special birthday surprise just for you">
+    <meta property="og:type" content="website">
+    <title>Happy Birthday {{ name }}! 🎂</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Dancing+Script:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-heart">❤️</div>
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+            <p class="loading-text">Preparing something special...</p>
+        </div>
+    </div>
+
+    <canvas id="particles-canvas"></canvas>
+
+    <div id="hearts-container"></div>
+
+    <div id="confetti-container"></div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top glass-nav">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <span class="brand-icon">🎂</span> {{ name }}'s Day
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#message">Message</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#messages">Messages</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#music">Music</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#reasons">Reasons</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#surprise">Surprise</a></li>
+                    <li class="nav-item">
+                        <button class="btn nav-btn ms-2" id="themeToggle" aria-label="Toggle dark mode">
+                            <i class="bi bi-moon-fill"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero-section">
+        <div class="container text-center">
+            <div class="hero-badge animate-fade-in">
+                <span class="badge-glow">🎉 Special Day</span>
+            </div>
+            <h1 class="hero-title animate-slide-up">
+                Happy Birthday <span class="highlight-name">{{ name }}</span> 🎂
+            </h1>
+            <p class="hero-subtitle animate-slide-up delay-2">
+                Today is all about celebrating someone truly special.
+            </p>
+            <div class="hero-actions animate-fade-in delay-3">
+                <a href="#message" class="btn btn-primary btn-lg hero-btn">
+                    <i class="bi bi-heart-fill me-2"></i>Read Your Message
+                </a>
+                <a href="#surprise" class="btn btn-outline-light btn-lg hero-btn-outline">
+                    <i class="bi bi-gift-fill me-2"></i>Open Surprise
+                </a>
+            </div>
+            <div class="scroll-indicator animate-bounce">
+                <span>Scroll Down</span>
+                <i class="bi bi-chevron-down"></i>
+            </div>
+        </div>
+    </section>
+
+    <section id="message" class="section message-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="message-card glass-card" data-aos="fade-up">
+                        <div class="message-header">
+                            <span class="message-emoji">💌</span>
+                            <h2>Dear {{ name }},</h2>
+                        </div>
+                        <div class="message-body">
+                            <p>
+                                On this beautiful day, I wanted to take a moment to remind you just how
+                                incredible you are. Every conversation, every laugh, every moment shared
+                                with you has been a gift I treasure deeply.
+                            </p>
+                            <p>
+                                You have this magical way of lighting up every room you walk into. Your
+                                kindness inspires me, your intelligence amazes me, and your smile...
+                                well, your smile could brighten the darkest of nights.
+                            </p>
+                            <p>
+                                I hope this year brings you everything you've been dreaming of and more.
+                                May it be filled with joy, adventure, and countless beautiful moments.
+                                You deserve nothing but the absolute best this world has to offer.
+                            </p>
+                            <p class="message-signature">
+                                With all my heart,<br>
+                                <span class="signature-name">Someone who thinks you're extraordinary</span>
+                            </p>
+                            <div class="message-footer">
+                                <span class="message-date">June 25, 2026</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="messages" class="section messages-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">A Little <span class="text-gradient">Something</span></h2>
+                <p class="section-subtitle">A mix of silly and heartfelt, just for you</p>
+            </div>
+            <div class="messages-grid">
+                {% for msg in messages %}
+                <div class="message-item glass-card" data-aos="zoom-in" data-aos-delay="{{ loop.index0 * 100 }}">
+                    <div class="message-item-emoji">{{ msg.emoji }}</div>
+                    <span class="message-item-badge {{ msg.type }}">{{ msg.type }}</span>
+                    <span class="message-item-icon">{{ msg.icon }}</span>
+                    <h3>{{ msg.title }}</h3>
+                    <p>{{ msg.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="text-center mt-5">
+                <a href="{{ url_for('messages') }}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-heart-fill me-2"></i>See Them All
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="section gallery-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">Photo <span class="text-gradient">Gallery</span></h2>
+                <p class="section-subtitle">Beautiful moments captured in time</p>
+            </div>
+            <div class="row g-4 gallery-grid">
+                <div class="col-6 col-md-4 col-lg-3 gallery-item" data-aos="zoom-in">
+                    <div class="gallery-card">
+                        <div class="gallery-placeholder">
+                            <i class="bi bi-camera"></i>
+                            <span>Add Photo 1</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="gallery-caption">A beautiful memory</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 gallery-item" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="gallery-card">
+                        <div class="gallery-placeholder">
+                            <i class="bi bi-camera"></i>
+                            <span>Add Photo 2</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="gallery-caption">A special moment</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 gallery-item" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="gallery-card">
+                        <div class="gallery-placeholder">
+                            <i class="bi bi-camera"></i>
+                            <span>Add Photo 3</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="gallery-caption">A happy day</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 gallery-item" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="gallery-card">
+                        <div class="gallery-placeholder">
+                            <i class="bi bi-camera"></i>
+                            <span>Add Photo 4</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="gallery-caption">A lovely time</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 gallery-item" data-aos="zoom-in">
+                    <div class="gallery-card">
+                        <div class="gallery-placeholder">
+                            <i class="bi bi-camera"></i>
+                            <span>Add Photo 5</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="gallery-caption">A cherished memory</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 gallery-item" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="gallery-card">
+                        <div class="gallery-placeholder">
+                            <i class="bi bi-camera"></i>
+                            <span>Add Photo 6</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="gallery-caption">A wonderful moment</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 gallery-item" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="gallery-card">
+                        <div class="gallery-placeholder">
+                            <i class="bi bi-camera"></i>
+                            <span>Add Photo 7</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="gallery-caption">A precious day</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 gallery-item" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="gallery-card">
+                        <div class="gallery-placeholder">
+                            <i class="bi bi-camera"></i>
+                            <span>Add Photo 8</span>
+                        </div>
+                        <div class="gallery-overlay">
+                            <span class="gallery-caption">A memory to keep</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="music" class="section music-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="section-header text-center">
+                        <h2 class="section-title">A Song for <span class="text-gradient">You</span></h2>
+                        <p class="section-subtitle">This one's for you</p>
+                    </div>
+                    <div class="music-card glass-card" data-aos="flip-up">
+                        <div class="music-art">
+                            <div class="music-disc">
+                                <div class="music-disc-inner">
+                                    <i class="bi bi-music-note-beamed"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="music-info">
+                            <h3 class="music-title">Our Song</h3>
+                            <p class="music-artist">For {{ name }}</p>
+                        </div>
+                        <div class="music-controls">
+                            <button class="music-btn" id="musicToggle" aria-label="Toggle music">
+                                <i class="bi bi-play-circle-fill"></i>
+                            </button>
+                            <div class="music-progress">
+                                <div class="music-progress-bar" id="musicProgressBar"></div>
+                            </div>
+                            <span class="music-time" id="musicTime">0:00</span>
+                        </div>
+                        <div class="music-volume-wrapper">
+                            <i class="bi bi-volume-up"></i>
+                            <input type="range" class="music-volume" id="musicVolume" min="0" max="1" step="0.01" value="0.5">
+                        </div>
+                        <p class="music-note">🎵 Add your MP3 file to <code>static/music/</code> and update the source in script.js</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reasons" class="section reasons-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">Reasons You're <span class="text-gradient">Amazing</span></h2>
+                <p class="section-subtitle">Just a few of the many reasons</p>
+            </div>
+            <div class="row g-4 justify-content-center">
+                {% for reason in reasons %}
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="reason-card glass-card" data-aos="flip-left" data-aos-delay="{{ loop.index0 * 100 }}">
+                        <div class="reason-icon" style="background: {{ reason.color }}20; color: {{ reason.color }};">
+                            {{ reason.icon }}
+                        </div>
+                        <h4 class="reason-title">{{ reason.title }}</h4>
+                        <p class="reason-desc">{{ reason.description }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section id="surprise" class="section surprise-section">
+        <div class="container text-center">
+            <div class="section-header">
+                <h2 class="section-title">Your <span class="text-gradient">Surprise</span></h2>
+                <p class="section-subtitle">Something special just for you</p>
+            </div>
+            <button class="surprise-btn" id="surpriseBtn" data-aos="zoom-in">
+                <span class="surprise-btn-text">Click for a Surprise</span>
+                <span class="surprise-btn-icon">❤️</span>
+            </button>
+        </div>
+    </section>
+
+    <div class="modal fade" id="surpriseModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-modal">
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="modal-icon">
+                        <span class="floating-heart">💖</span>
+                    </div>
+                    <h3 class="modal-title-text">🎉 Surprise! 🎉</h3>
+                    <p class="modal-message">
+                        Thank you for being such a wonderful person. I hope this year brings you
+                        endless happiness, smiles, and unforgettable moments.
+                    </p>
+                    <div class="modal-footer-actions">
+                        <button class="btn btn-primary" data-bs-dismiss="modal">
+                            <i class="bi bi-heart-fill me-2"></i>Thank You!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="secret-letter" class="section letter-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="section-header text-center">
+                        <h2 class="section-title">A Secret for <span class="text-gradient">You</span></h2>
+                        <p class="section-subtitle">Click below to reveal something special</p>
+                    </div>
+                    <div class="text-center">
+                        <button class="letter-btn" id="letterBtn" data-aos="zoom-in">
+                            <span class="letter-btn-icon">✉️</span>
+                            <span class="letter-btn-text">Open Secret Letter</span>
+                        </button>
+                    </div>
+                    <div class="letter-container" id="letterContainer">
+                        <div class="letter-card glass-card">
+                            <div class="letter-stamp">💌</div>
+                            <div class="letter-content">
+                                <h3 class="letter-greeting">My Dearest {{ name }},</h3>
+                                <p>
+                                    There are moments in life that leave an imprint on your soul, and meeting
+                                    you was one of those moments for me. I've wanted to tell you for so long
+                                    how much you mean to me, but words never feel like enough.
+                                </p>
+                                <p>
+                                    You are the kind of person who makes the world a better place just by
+                                    being in it. Your strength inspires me, your kindness moves me, and your
+                                    presence makes everything feel right.
+                                </p>
+                                <p>
+                                    I know I'm just a shy person trying to find the right words, but I hope
+                                    this letter gives you a glimpse of what's in my heart. You deserve to know
+                                    how truly special you are.
+                                </p>
+                                <p>
+                                    Happy Birthday, {{ name }}. May your life be filled with as much joy
+                                    and beauty as you bring to others.
+                                </p>
+                                <div class="letter-closing">
+                                    <p>Forever grateful,</p>
+                                    <p class="letter-signature">Yours truly</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section finale-section">
+        <div class="container text-center">
+            <div class="fireworks-container" id="fireworksContainer"></div>
+            <h2 class="finale-title" data-aos="zoom-in">
+                Happy Birthday once again, <span class="highlight-name">{{ name }}</span> ❤️
+            </h2>
+            <p class="finale-subtitle" data-aos="fade-up" data-aos-delay="300">
+                You deserve the world and more.
+            </p>
+            <div class="finale-balloons" data-aos="fade-up" data-aos-delay="600">
+                🎈 🎈 🎈 🎈 🎈
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer glass-footer">
+        <div class="container text-center">
+            <p class="footer-text">
+                Made with <span class="footer-heart">❤️</span> especially for you, {{ name }}
+            </p>
+            <p class="footer-year">2026</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
